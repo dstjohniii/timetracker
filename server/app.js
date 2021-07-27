@@ -1,5 +1,10 @@
 const express = require('express')
 const { ApolloServer, gql } = require('apollo-server-express')
+require('dotenv').config({
+  path: '../.env'
+})
+
+const port = process.env.PORT;
 
 async function startApolloServer() {
   // Construct a schema, using GraphQL schema language
@@ -22,9 +27,9 @@ async function startApolloServer() {
   const app = express()
   server.applyMiddleware({ app })
 
-  await new Promise((resolve) => app.listen({ port: 4000 }, resolve))
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+  await new Promise((resolve) => app.listen({port}, resolve))
+  console.log(`🚀 Server ready at http://localhost:${port}${server.graphqlPath}`)
   return { server, app }
 }
 
-startApolloServer()
+startApolloServer();

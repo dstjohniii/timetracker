@@ -1,0 +1,14 @@
+version: "3.4"
+
+services:
+  timetrackerserver:
+    image: timetrackerserver
+    build:
+      context: server
+      dockerfile: ./Dockerfile
+    environment:
+      PORT: ${PORT}
+      NODE_ENV: production
+
+    ports:
+      - ${PORT}:${PORT}
