@@ -18,5 +18,7 @@ magical_password
 http://localhost:9002/graphql
 
 
-## Tutoirials used
+## Tutorials used
 -Sequalize: https://www.digitalocean.com/community/tutorials/how-to-set-up-a-graphql-server-in-node-js-with-apollo-server-and-sequelize
+
+https://sequelize.org/master/manual/getting-started.html

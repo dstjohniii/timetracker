@@ -8,18 +8,25 @@ services:
       dockerfile: ./Dockerfile
     environment:
       PORT: ${PORT}
-      NODE_ENV: production
-
+      NODE_ENV: ${NODE_ENV}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+    depends_on:
+      - "database"
+    command: ["./wait-for-it.sh", "database:5432", "--", "npm", "run", "start:migrate"]
     ports:
       - ${PORT}:${PORT}
-  
+
   database:
     image: "postgres" # use latest official postgres version
     env_file:
-      - database.env # configure postgres
-    volumes:
-      - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
+      - .env # configure postgres
+    # volumes:
+    #   - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
     ports:
       - "5432:5432"
+
 volumes:
   database-data: # named volumes can be managed easier using docker-compose
