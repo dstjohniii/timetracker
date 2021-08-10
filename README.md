@@ -11,8 +11,12 @@ psql
 
 ## Magical database Postgres connection
 docker-compose run database bash
-psql --host=database --username=unicorn_user --dbname=rainbow_database
+psql --host=localhost --username=unicorn_user --dbname=rainbow_database --port=5432
 magical_password
 
 ## Testing
 http://localhost:9002/graphql
+
+
+## Tutoirials used
+-Sequalize: https://www.digitalocean.com/community/tutorials/how-to-set-up-a-graphql-server-in-node-js-with-apollo-server-and-sequelize
