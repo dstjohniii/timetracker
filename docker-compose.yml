@@ -15,7 +15,7 @@ services:
       POSTGRES_HOST: ${POSTGRES_HOST}
     depends_on:
       - "database"
-    command: ["./wait-for-it.sh", "database:5432", "--", "npm", "run", "start:migrate"]
+    entrypoint: ["/bin/bash", "./entrypoint.sh"]
     ports:
       - ${PORT}:${PORT}
 
@@ -23,8 +23,8 @@ services:
     image: "postgres" # use latest official postgres version
     env_file:
       - .env # configure postgres
-    # volumes:
-    #   - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
+    volumes:
+      - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
     ports:
       - "5432:5432"
 
