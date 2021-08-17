@@ -22,3 +22,7 @@ http://localhost:9002/graphql
 -Sequalize: https://www.digitalocean.com/community/tutorials/how-to-set-up-a-graphql-server-in-node-js-with-apollo-server-and-sequelize
 
 https://sequelize.org/master/manual/getting-started.html
+
+#### React prod docker
+https://dev.to/mubbashir10/containerize-react-app-with-docker-for-production-572b
+https://www.bogotobogo.com/DevOps/Docker/Docker-React-App.php
