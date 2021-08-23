@@ -27,15 +27,15 @@ services:
       - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
     ports:
       - "5432:5432"
-      
+
   timetrackerclient:
     image: timetrackerclient
-    build: 
+    build:
       context: client
       dockerfile: ./Dockerfile
     volumes:
-      - '.:/app'
-      - '/app/node_modules'
+      - "./client:/usr/src/app"
+      - "/app/node_modules"
     ports:
       - 3000:3000
     stdin_open: true
