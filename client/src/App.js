@@ -1,24 +1,41 @@
-import logo from "./logo.svg";
-import "./App.css";
+import { useQuery, gql } from "@apollo/client";
+
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(1),
+    padding: theme.spacing(1),
+  },
+}));
 
 function App() {
+  const classes = useStyles();
+  const { loading, error, data } = useQuery(
+    gql`
+      query {
+        user(id: 1) {
+          email
+          name
+        }
+      }
+    `
+  );
+
+  if (loading) return <div>loading...</div>;
+  if (error) return <div>{error.message}</div>;
+  const { user } = data;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Paper className={classes.paper}>
+        <Typography>{user.name}</Typography>
+        <Typography>{user.email}</Typography>
+      </Paper>
+    </Container>
   );
 }
 
