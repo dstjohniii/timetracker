@@ -1,10 +1,10 @@
 version: "3.4"
 
 services:
-  timetrackerserver:
-    image: timetrackerserver
+  api:
+    image: api
     build:
-      context: server
+      context: api
       dockerfile: ./Dockerfile
     environment:
       PORT: ${PORT}
@@ -20,7 +20,7 @@ services:
       - ${PORT}:${PORT}
 
   database:
-    image: "postgres" # use latest official postgres version
+    image: postgres # use latest official postgres version
     env_file:
       - .env # configure postgres
     volumes:
@@ -28,20 +28,28 @@ services:
     ports:
       - "5432:5432"
 
-  timetrackerclient:
-    image: timetrackerclient
+  dev-client:
+    image: dev-client
     build:
       context: client
       dockerfile: ./Dockerfile
     volumes:
       - "./client:/usr/src/app"
-      - "/app/node_modules"
     ports:
       - 3000:3000
     stdin_open: true
     environment:
       - CHOKIDAR_USEPOLLING=true
-    # command: npm start
+
+  server:
+    image: server
+    build:
+      context: client
+      dockerfile: ./Dockerfile.prod
+    volumes:
+    - "./client:/usr/src/app"
+    ports:
+      - 9001:9001
 
 volumes:
   database-data: # named volumes can be managed easier using docker-compose
