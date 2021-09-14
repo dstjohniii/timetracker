@@ -1,7 +1,7 @@
 const express = require("express");
 const { ApolloServer, gql } = require("apollo-server-express");
-const typeDefs = require("./schema/userRecipes");
-const resolvers = require("./resolvers/userRecipes");
+const typeDefs = require("./schema/user");
+const resolvers = require("./resolvers/user");
 const models = require("./models");
 require("dotenv").config({
   path: "../.env",
