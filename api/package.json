@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon -L app.js",
     "sq": "sequelize",
-    "start:migrate": "node app.js && sequelize db:migrate"
+    "start:migrate": "nodemon app.js && sequelize db:migrate"
   },
   "dependencies": {
     "apollo-server-express": "^3.0.2",
@@ -17,5 +17,8 @@
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.6.5",
     "sequelize-cli": "^6.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }

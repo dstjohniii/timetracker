@@ -6,6 +6,8 @@ services:
     build:
       context: api
       dockerfile: ./Dockerfile
+    volumes:
+      - "./api:/usr/src/app"
     environment:
       - PORT=${PORT}
       - NODE_ENV=${NODE_ENV}
