@@ -1,12 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { ThemeProvider, createTheme } from "@material-ui/core/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { grey } from "@mui/material/colors";
 import "typeface-roboto";
 
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+
+import { BrowserRouter as Router} from "react-router-dom";
 
 const client = new ApolloClient({
   uri: `/graphql`,
@@ -15,7 +18,15 @@ const client = new ApolloClient({
 
 const theme = createTheme({
   palette: {
-    type: "dark",
+    mode: "dark",
+    background: {
+      grey: grey[800],
+    },
+  },
+  typography: {
+    h1: {
+      fontSize: "clamp(2.625rem, 1.2857rem + 3.5714vw, 4rem)",
+    },
   },
 });
 
@@ -23,8 +34,10 @@ ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <App />
+        <Router>
+          <CssBaseline />
+          <App />
+        </Router>
       </ThemeProvider>
     </ApolloProvider>
   </React.StrictMode>,
