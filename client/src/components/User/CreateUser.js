@@ -23,11 +23,11 @@ const validationSchema = yup.object({
     .required("Email is required"),
   password: yup
     .string("Enter your password")
-    .min(12, "Password should be of minimum 12 characters length")
+    .min(8, "Password should be of minimum 8 characters length")
     .required("Password is required"),
   confirmPassword: yup
     .string("Enter your password")
-    .min(12, "Password should be of minimum 12 characters length")
+    .min(8, "Password should be of minimum 8 characters length")
     .required("Password is required")
     .oneOf([yup.ref("password"), null], "Passwords must match"),
 });
@@ -51,6 +51,7 @@ export default function CreateUser({ open, handleClose }) {
       },
     });
     handleClose();
+    formik.resetForm();
   };
 
   const formRef = useRef();

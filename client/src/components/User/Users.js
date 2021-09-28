@@ -10,10 +10,11 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 
-import { useQuery } from "@apollo/client";
-import { GET_ALL_USERS } from "../../queries/users";
+import { useMutation, useQuery } from "@apollo/client";
+import { DELETE_USER, GET_ALL_USERS } from "../../queries/users";
 import CreateUser from "./CreateUser";
 
 const EnhancedTableToolbar = ({ handleAdd }) => {
@@ -34,9 +35,14 @@ export default function Users() {
   const [create, setCreate] = useState(false);
 
   const { loading, error, data } = useQuery(GET_ALL_USERS);
+  const [deleteUser, { loading: deleteLoading, error: deleteError }] =
+    useMutation(DELETE_USER, {
+      refetchQueries: [GET_ALL_USERS],
+    });
 
-  if (loading) return <div>loading...</div>;
+  if (loading || deleteLoading) return <div>loading...</div>;
   if (error) return <div>{error.message}</div>;
+  if (deleteError) return <div>{deleteError.message}</div>;
   const { allUsers } = data;
 
   return (
@@ -51,6 +57,7 @@ export default function Users() {
                 <TableCell>ID</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Email</TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -59,7 +66,19 @@ export default function Users() {
                   <TableCell>{id}</TableCell>
                   <TableCell>{name}</TableCell>
                   <TableCell>{email}</TableCell>
-                  <TableCell></TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      onClick={() =>
+                        deleteUser({
+                          variables: {
+                            id,
+                          },
+                        })
+                      }
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

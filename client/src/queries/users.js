@@ -19,3 +19,9 @@ export const CREATE_USER = gql`
     }
   }
 `;
+
+export const DELETE_USER = gql`
+  mutation Mutation($id: Int!) {
+    deleteUser(id: $id)
+  }
+`;
