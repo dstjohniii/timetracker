@@ -4,7 +4,6 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useMutation } from "@apollo/client";
 import { CREATE_USER, GET_ALL_USERS } from "../../queries/users";
@@ -38,12 +37,12 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 }));
 
 export default function CreateUser({ open, handleClose }) {
-  const [createUser, { data, loading, error }] = useMutation(CREATE_USER, {
+  const [createUser, { loading, error }] = useMutation(CREATE_USER, {
     refetchQueries: [GET_ALL_USERS],
   });
 
   const onSubmit = (values) => {
-    const { name, email, password, confirmPassword } = values;
+    const { name, email, password } = values;
     createUser({
       variables: {
         name,
@@ -68,8 +67,6 @@ export default function CreateUser({ open, handleClose }) {
 
   if (loading) return <div>loading...</div>;
   if (error) return <div>{error.message}</div>;
-
-  console.log(`formik`, formik);
 
   return (
     <Dialog open={open} onClose={handleClose}>

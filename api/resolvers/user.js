@@ -17,6 +17,13 @@ const resolvers = {
         password: await bcrypt.hash(password, 10),
       });
     },
+    async deleteUser(root, { id }, { models }) {
+      return models.user.destroy({
+        where: {
+          id,
+        },
+      });
+    },
   },
 };
 
