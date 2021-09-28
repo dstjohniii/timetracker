@@ -6,47 +6,42 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useMutation } from "@apollo/client";
-import { CREATE_USER, GET_ALL_USERS } from "../../queries/users";
+import { GET_ALL_USERS, UPDATE_USER } from "../../queries/users";
 import { styled } from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
 import * as yup from "yup";
 import { useFormik } from "formik";
 
 const validationSchema = yup.object({
-  name: yup
-    .string()
-    .max(25, "Your name is too long, sorry.")
-    .required("Name is required"),
-  email: yup
-    .string()
-    .email("Enter a valid email")
-    .required("Email is required"),
+  name: yup.string().max(25, "Your name is too long, sorry."),
+  email: yup.string().email("Enter a valid email"),
   password: yup
     .string()
-    .min(8, "Password should be of minimum 8 characters length")
-    .required("Password is required"),
+    .min(8, "Password should be of minimum 8 characters length"),
   confirmPassword: yup
     .string()
     .min(8, "Password should be of minimum 8 characters length")
-    .required("Password is required")
     .test("passwords-match", "Passwords must match", function (value) {
       return this.parent.password === value;
     }),
 });
 
+console.log(`validationSchema`, validationSchema);
+
 const StyledTextField = styled(TextField)(({ theme }) => ({
   margin: theme.spacing(1, 0),
 }));
 
-export default function CreateUser({ open, handleClose }) {
-  const [createUser, { loading, error }] = useMutation(CREATE_USER, {
+export default function UpdateUser({ open, handleClose, data }) {
+  const [updateUser, { loading, error }] = useMutation(UPDATE_USER, {
     refetchQueries: [GET_ALL_USERS],
   });
 
   const onSubmit = (values) => {
     const { name, email, password } = values;
-    createUser({
+    updateUser({
       variables: {
+        id: data.id,
         name,
         password,
         email,
@@ -58,9 +53,10 @@ export default function CreateUser({ open, handleClose }) {
 
   const formRef = useRef();
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      name: "",
-      email: "",
+      name: data.name,
+      email: data.email,
       password: "",
       confirmPassword: "",
     },
@@ -73,7 +69,7 @@ export default function CreateUser({ open, handleClose }) {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Create a User</DialogTitle>
+      <DialogTitle>Update {data.name}</DialogTitle>
       <DialogContent>
         <form ref={formRef} onSubmit={formik.handleSubmit}>
           <Stack>

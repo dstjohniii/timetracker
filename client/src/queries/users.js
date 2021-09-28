@@ -20,6 +20,17 @@ export const CREATE_USER = gql`
   }
 `;
 
+export const UPDATE_USER = gql`
+  mutation Mutation(
+    $id: Int!
+    $name: String
+    $email: String
+    $password: String
+  ) {
+    updateUser(id: $id, name: $name, email: $email, password: $password)
+  }
+`;
+
 export const DELETE_USER = gql`
   mutation Mutation($id: Int!) {
     deleteUser(id: $id)

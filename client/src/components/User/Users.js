@@ -16,6 +16,7 @@ import Box from "@mui/material/Box";
 import { useMutation, useQuery } from "@apollo/client";
 import { DELETE_USER, GET_ALL_USERS } from "../../queries/users";
 import CreateUser from "./CreateUser";
+import UpdateUser from "./UpdateUser";
 
 const EnhancedTableToolbar = ({ handleAdd }) => {
   return (
@@ -33,6 +34,7 @@ const EnhancedTableToolbar = ({ handleAdd }) => {
 
 export default function Users() {
   const [create, setCreate] = useState(false);
+  const [update, setUpdate] = useState(false);
 
   const { loading, error, data } = useQuery(GET_ALL_USERS);
   const [deleteUser, { loading: deleteLoading, error: deleteError }] =
@@ -48,6 +50,11 @@ export default function Users() {
   return (
     <>
       <CreateUser open={create} handleClose={() => setCreate(false)} />
+      <UpdateUser
+        open={Boolean(update)}
+        handleClose={() => setUpdate(false)}
+        data={update}
+      />
       <Paper>
         <EnhancedTableToolbar handleAdd={() => setCreate(true)} />
         <TableContainer>
@@ -62,19 +69,23 @@ export default function Users() {
             </TableHead>
             <TableBody>
               {allUsers.map(({ id, name, email }) => (
-                <TableRow key={id} onClick={() => console.log("hi")}>
+                <TableRow
+                  key={id}
+                  onClick={() => setUpdate({ id, name, email })}
+                >
                   <TableCell>{id}</TableCell>
                   <TableCell>{name}</TableCell>
                   <TableCell>{email}</TableCell>
                   <TableCell align="right">
                     <IconButton
-                      onClick={() =>
+                      onClick={(e) => {
+                        e.stopPropagation();
                         deleteUser({
                           variables: {
                             id,
                           },
-                        })
-                      }
+                        });
+                      }}
                     >
                       <DeleteIcon />
                     </IconButton>
