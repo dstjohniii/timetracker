@@ -1,23 +1,17 @@
 import { useState } from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
+import { useQuery } from "@apollo/client";
+import { GET_ALL_USERS } from "../../queries/users";
 
-import { useMutation, useQuery } from "@apollo/client";
-import { DELETE_USER, GET_ALL_USERS } from "../../queries/users";
 import CreateUser from "./CreateUser";
 import UpdateUser from "./UpdateUser";
 import { User } from "../../types/users";
+import UsersTable from "./UsersTable";
 
 interface EnhancedTableToolbarProps {
   handleAdd: () => void;
@@ -42,14 +36,9 @@ export default function Users() {
   const [update, setUpdate] = useState<undefined | User>();
 
   const { loading, error, data } = useQuery(GET_ALL_USERS);
-  const [deleteUser, { loading: deleteLoading, error: deleteError }] =
-    useMutation(DELETE_USER, {
-      refetchQueries: [GET_ALL_USERS],
-    });
 
-  if (loading || deleteLoading) return <div>loading...</div>;
+  if (loading) return <div>loading...</div>;
   if (error) return <div>{error.message}</div>;
-  if (deleteError) return <div>{deleteError.message}</div>;
   const { allUsers } = data;
 
   return (
@@ -62,44 +51,7 @@ export default function Users() {
       />
       <Paper>
         <EnhancedTableToolbar handleAdd={() => setCreate(true)} />
-        <TableContainer>
-          <Table aria-label="users table">
-            <TableHead>
-              <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {allUsers.map(({ id, name, email }: User) => (
-                <TableRow
-                  key={id}
-                  onClick={() => setUpdate({ id, name, email })}
-                >
-                  <TableCell>{id}</TableCell>
-                  <TableCell>{name}</TableCell>
-                  <TableCell>{email}</TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        deleteUser({
-                          variables: {
-                            id,
-                          },
-                        });
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <UsersTable users={allUsers} setUpdate={setUpdate} />
       </Paper>
     </>
   );
