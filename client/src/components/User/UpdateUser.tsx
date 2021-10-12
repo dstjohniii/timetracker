@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
+import TextField, { TextFieldProps } from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -11,6 +11,7 @@ import { styled } from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
 import * as yup from "yup";
 import { useFormik } from "formik";
+import { User, UserFormValues } from "../../types/users";
 
 const validationSchema = yup.object({
   name: yup.string().max(25, "Your name is too long, sorry."),
@@ -26,22 +27,30 @@ const validationSchema = yup.object({
     }),
 });
 
-console.log(`validationSchema`, validationSchema);
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
+const StyledTextField = styled(TextField)<TextFieldProps>(({ theme }) => ({
   margin: theme.spacing(1, 0),
 }));
 
-export default function UpdateUser({ open, handleClose, data }) {
+interface UpdateUserProps {
+  open: boolean;
+  handleClose: () => void;
+  data: undefined | User;
+}
+
+export default function UpdateUser({
+  open,
+  handleClose,
+  data,
+}: UpdateUserProps) {
   const [updateUser, { loading, error }] = useMutation(UPDATE_USER, {
     refetchQueries: [GET_ALL_USERS],
   });
 
-  const onSubmit = (values) => {
+  const onSubmit = (values: UserFormValues) => {
     const { name, email, password } = values;
     updateUser({
       variables: {
-        id: data.id,
+        id: data?.id,
         name,
         password,
         email,
@@ -51,12 +60,12 @@ export default function UpdateUser({ open, handleClose, data }) {
     formik.resetForm();
   };
 
-  const formRef = useRef();
+  const formRef = useRef<HTMLFormElement>(null);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: data.name,
-      email: data.email,
+      name: data?.name ?? "",
+      email: data?.email ?? "",
       password: "",
       confirmPassword: "",
     },
@@ -69,7 +78,7 @@ export default function UpdateUser({ open, handleClose, data }) {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Update {data.name}</DialogTitle>
+      <DialogTitle>Update {data?.name ?? "User"}</DialogTitle>
       <DialogContent>
         <form ref={formRef} onSubmit={formik.handleSubmit}>
           <Stack>
@@ -129,7 +138,7 @@ export default function UpdateUser({ open, handleClose, data }) {
         </Button>
         <Button
           onClick={() => {
-            formRef.current.dispatchEvent(
+            formRef?.current?.dispatchEvent(
               new Event("submit", {
                 bubbles: true,
               })

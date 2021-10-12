@@ -1,3 +1,4 @@
+import * as React from "react";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -9,19 +10,30 @@ import {
   useRouteMatch,
   Redirect,
   useLocation,
+  LinkProps as RouterLinkProps,
 } from "react-router-dom";
 import Link from "@mui/material/Link";
 import { Breadcrumbs } from "@mui/material";
+import { Type } from "typescript";
 
-function formatTitle(title) {
+function formatTitle(title: string) {
   if (!title) return "Dashboard";
   return title.charAt(0).toUpperCase() + title.slice(1);
 }
 
-const LinkRouter = (props) => <Link {...props} component={RouterLink} />;
+// const LinkRouter = (props: Type) => <Link {...props} component={RouterLink} />;
+const LinkBehavior = React.forwardRef<any, Omit<RouterLinkProps, "to">>(
+  (props, ref) => (
+    <RouterLink ref={ref} to="/getting-started/installation/" {...props} />
+  )
+);
+
+interface MatchParams {
+  route: string;
+}
 
 export default function App() {
-  const match = useRouteMatch("/:route");
+  const match = useRouteMatch<MatchParams>();
   const { pathname } = useLocation();
   const pathnames = pathname.split("/").filter((x) => x);
 
@@ -45,9 +57,9 @@ export default function App() {
             {formatTitle(match?.params?.route)}
           </Typography>
           <Breadcrumbs>
-            <LinkRouter underline="hover" to="/">
+            <Link component={RouterLink} to="/">
               Dashboard
-            </LinkRouter>
+            </Link>
             {pathnames.map((value, index) => {
               const last = index === pathnames.length - 1;
               const to = `/${pathnames.slice(0, index + 1).join("/")}`;
@@ -57,9 +69,9 @@ export default function App() {
                   {formatTitle(value)}
                 </Typography>
               ) : (
-                <LinkRouter underline="hover" color="inherit" to={to} key={to}>
+                <Link component={RouterLink} color="inherit" to={to} key={to}>
                   {formatTitle(value)}
-                </LinkRouter>
+                </Link>
               );
             })}
           </Breadcrumbs>

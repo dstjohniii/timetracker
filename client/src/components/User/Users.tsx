@@ -17,8 +17,13 @@ import { useMutation, useQuery } from "@apollo/client";
 import { DELETE_USER, GET_ALL_USERS } from "../../queries/users";
 import CreateUser from "./CreateUser";
 import UpdateUser from "./UpdateUser";
+import { User } from "../../types/users";
 
-const EnhancedTableToolbar = ({ handleAdd }) => {
+interface EnhancedTableToolbarProps {
+  handleAdd: () => void;
+}
+
+const EnhancedTableToolbar = ({ handleAdd }: EnhancedTableToolbarProps) => {
   return (
     <Toolbar>
       <Box display="flex" justifyContent="flex-end" width="100%">
@@ -34,7 +39,7 @@ const EnhancedTableToolbar = ({ handleAdd }) => {
 
 export default function Users() {
   const [create, setCreate] = useState(false);
-  const [update, setUpdate] = useState(false);
+  const [update, setUpdate] = useState<undefined | User>();
 
   const { loading, error, data } = useQuery(GET_ALL_USERS);
   const [deleteUser, { loading: deleteLoading, error: deleteError }] =
@@ -52,7 +57,7 @@ export default function Users() {
       <CreateUser open={create} handleClose={() => setCreate(false)} />
       <UpdateUser
         open={Boolean(update)}
-        handleClose={() => setUpdate(false)}
+        handleClose={() => setUpdate(undefined)}
         data={update}
       />
       <Paper>
@@ -68,7 +73,7 @@ export default function Users() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {allUsers.map(({ id, name, email }) => (
+              {allUsers.map(({ id, name, email }: User) => (
                 <TableRow
                   key={id}
                   onClick={() => setUpdate({ id, name, email })}

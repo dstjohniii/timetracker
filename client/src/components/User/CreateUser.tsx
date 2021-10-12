@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
+import TextField, { TextFieldProps } from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -11,6 +11,7 @@ import { styled } from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
 import * as yup from "yup";
 import { useFormik } from "formik";
+import { UserFormValues } from "../../types/users";
 
 const validationSchema = yup.object({
   name: yup
@@ -34,16 +35,21 @@ const validationSchema = yup.object({
     }),
 });
 
-const StyledTextField = styled(TextField)(({ theme }) => ({
+const StyledTextField = styled(TextField)<TextFieldProps>(({ theme }) => ({
   margin: theme.spacing(1, 0),
 }));
 
-export default function CreateUser({ open, handleClose }) {
+interface CreateUserProps {
+  open: boolean;
+  handleClose: () => void;
+}
+
+export default function CreateUser({ open, handleClose }: CreateUserProps) {
   const [createUser, { loading, error }] = useMutation(CREATE_USER, {
     refetchQueries: [GET_ALL_USERS],
   });
 
-  const onSubmit = (values) => {
+  const onSubmit = (values: UserFormValues) => {
     const { name, email, password } = values;
     createUser({
       variables: {
@@ -56,7 +62,7 @@ export default function CreateUser({ open, handleClose }) {
     formik.resetForm();
   };
 
-  const formRef = useRef();
+  const formRef = useRef<HTMLFormElement>(null);
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -133,7 +139,7 @@ export default function CreateUser({ open, handleClose }) {
         </Button>
         <Button
           onClick={() => {
-            formRef.current.dispatchEvent(
+            formRef?.current?.dispatchEvent(
               new Event("submit", {
                 bubbles: true,
               })

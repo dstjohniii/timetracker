@@ -9,12 +9,18 @@ import "typeface-roboto";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-import { BrowserRouter as Router} from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 
 const client = new ApolloClient({
   uri: `/graphql`,
   cache: new InMemoryCache(),
 });
+
+declare module "@mui/material/styles/createPalette" {
+  interface TypeBackground {
+    grey: string;
+  }
+}
 
 const theme = createTheme({
   palette: {
