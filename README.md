@@ -26,6 +26,8 @@ http://localhost:9002/graphql
 
 https://sequelize.org/master/manual/getting-started.html
 
+AWS: https://docker-curriculum.com/#aws-elastic-container-service
+
 #### React prod docker
 
 https://dev.to/mubbashir10/containerize-react-app-with-docker-for-production-572b
@@ -38,3 +40,7 @@ https://www.bogotobogo.com/DevOps/Docker/Docker-React-App.php
 * start service
 * attach shell to api
 * npm run sq db:migrate:undo:all
+
+
+## AWS notes
+ecs-cli compose -f docker-compose-aws.yml up

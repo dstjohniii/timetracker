@@ -1,5 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 ./wait-for-it.sh database:5432
 npx sequelize db:migrate 
-npm start # must be last
+echo "we made it."
+
+# Run the main container command.
+exec "$@"

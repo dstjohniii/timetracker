@@ -17,7 +17,7 @@ services:
       - POSTGRES_HOST=${POSTGRES_HOST}
     depends_on:
       - "database"
-    entrypoint: ["/bin/bash", "./entrypoint.sh"]
+    # entrypoint: ["/bin/bash", "./entrypoint.sh"]
     ports:
       - ${PORT}:${PORT}
 

@@ -9,4 +9,7 @@ WORKDIR /usr/src/app
 COPY ["wait-for-it.sh", "package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 RUN npm install --silent && mv node_modules ../
 COPY . .
+RUN chmod +x ./wait-for-it.sh ./entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]
 EXPOSE ${PORT}
+CMD ["npm", "start"]
