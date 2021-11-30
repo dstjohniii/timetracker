@@ -13,9 +13,9 @@ import UpdateUser from "./UpdateUser";
 import { User } from "../../types/users";
 import UsersTable from "./UsersTable";
 
-interface EnhancedTableToolbarProps {
+type EnhancedTableToolbarProps = {
   handleAdd: () => void;
-}
+};
 
 const EnhancedTableToolbar = ({ handleAdd }: EnhancedTableToolbarProps) => {
   return (

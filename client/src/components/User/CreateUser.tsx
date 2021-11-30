@@ -6,12 +6,13 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useMutation } from "@apollo/client";
-import { CREATE_USER, GET_ALL_USERS } from "../../queries/users";
+import { CREATE_USER } from "../../queries/users";
 import { styled } from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { UserFormValues } from "../../types/users";
+import { USER_FRAGMENT } from "../../fragments/users";
 
 const validationSchema = yup.object({
   name: yup
@@ -39,14 +40,27 @@ const StyledTextField = styled(TextField)<TextFieldProps>(({ theme }) => ({
   margin: theme.spacing(1, 0),
 }));
 
-interface CreateUserProps {
+type CreateUserProps = {
   open: boolean;
   handleClose: () => void;
-}
+};
 
 export default function CreateUser({ open, handleClose }: CreateUserProps) {
   const [createUser, { loading, error }] = useMutation(CREATE_USER, {
-    refetchQueries: [GET_ALL_USERS],
+    // refetchQueries: [GET_ALL_USERS],
+    update(cache, { data: { createUser } }) {
+      cache.modify({
+        fields: {
+          allUsers(existingUsers = []) {
+            const newUserRef = cache.writeFragment({
+              data: createUser,
+              fragment: USER_FRAGMENT,
+            });
+            return [...existingUsers, newUserRef];
+          },
+        },
+      });
+    },
   });
 
   const onSubmit = (values: UserFormValues) => {

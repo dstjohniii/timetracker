@@ -44,15 +44,15 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - REACT_APP_API_BASE_URL=api:9002
 
-  server:
-    image: server
-    build:
-      context: client
-      dockerfile: ./Dockerfile.prod
-    volumes:
-      - "./client:/usr/src/app"
-    ports:
-      - 9001:9001
+  # server:
+  #   image: server
+  #   build:
+  #     context: client
+  #     dockerfile: ./Dockerfile.prod
+  #   volumes:
+  #     - "./client:/usr/src/app"
+  #   ports:
+  #     - 9001:9001
 
 volumes:
   database-data: # named volumes can be managed easier using docker-compose

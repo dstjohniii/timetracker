@@ -27,7 +27,11 @@ export const UPDATE_USER = gql`
     $email: String
     $password: String
   ) {
-    updateUser(id: $id, name: $name, email: $email, password: $password)
+    updateUser(id: $id, name: $name, email: $email, password: $password) {
+      id
+      name
+      email
+    }
   }
 `;
 

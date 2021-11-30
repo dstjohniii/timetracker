@@ -25,14 +25,17 @@ const resolvers = {
       });
     },
     async updateUser(root, { id, name, email, password }, { models }) {
-      return models.user.update(
-        { name, email, password },
-        {
-          where: {
-            id,
-          },
-        }
-      );
+      return models.user
+        .update(
+          { name, email, password },
+          {
+            where: {
+              id,
+            },
+            returning: true,
+          }
+        )
+        .then((data) => data?.[1]?.[0]?.dataValues);
     },
   },
 };

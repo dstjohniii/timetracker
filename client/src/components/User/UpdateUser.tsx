@@ -12,6 +12,7 @@ import Stack from "@mui/material/Stack";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { User, UserFormValues } from "../../types/users";
+import { USER_FRAGMENT } from "../../fragments/users";
 
 const validationSchema = yup.object({
   name: yup.string().max(25, "Your name is too long, sorry."),
@@ -43,7 +44,23 @@ export default function UpdateUser({
   data,
 }: UpdateUserProps) {
   const [updateUser, { loading, error }] = useMutation(UPDATE_USER, {
-    refetchQueries: [GET_ALL_USERS],
+    update(cache, { data: { updateUser } }) {
+      cache.modify({
+        fields: {
+          allUsers(existingUsers = []) {
+            const updateUserRef = cache.writeFragment({
+              data: updateUser,
+              fragment: USER_FRAGMENT,
+            });
+
+            return existingUsers.map((user: User) => {
+              if (user.id === updateUser.id) return updateUserRef;
+              return user;
+            });
+          },
+        },
+      });
+    },
   });
 
   const onSubmit = (values: UserFormValues) => {
