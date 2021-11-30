@@ -3,6 +3,7 @@ const { ApolloServer, gql } = require("apollo-server-express");
 const typeDefs = require("./schema/user");
 const resolvers = require("./resolvers/user");
 const models = require("./models");
+
 require("dotenv").config({
   path: "../.env",
 });
@@ -10,20 +11,6 @@ console.log(`process.env`, process.env);
 const port = process.env.PORT;
 
 async function startApolloServer() {
-  // // Construct a schema, using GraphQL schema language
-  // const typeDefs = gql`
-  //   type Query {
-  //     hello: String
-  //   }
-  // `;
-
-  // // Provide resolver functions for your schema fields
-  // const resolvers = {
-  //   Query: {
-  //     hello: () => "Hello world!",
-  //   },
-  // };
-
   const server = new ApolloServer({
     typeDefs,
     resolvers,
@@ -32,6 +19,7 @@ async function startApolloServer() {
   await server.start();
 
   const app = express();
+
   server.applyMiddleware({ app });
 
   await new Promise((resolve) => app.listen({ port }, resolve));

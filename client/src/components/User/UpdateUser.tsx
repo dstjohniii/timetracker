@@ -162,7 +162,7 @@ export default function UpdateUser({
             );
           }}
         >
-          Add
+          Update
         </Button>
       </DialogActions>
     </Dialog>

@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs");
+const authenticate = require("../auth");
 
 const resolvers = {
   Query: {
@@ -10,6 +11,13 @@ const resolvers = {
     },
   },
   Mutation: {
+    async login(root, { email, password }, { models }) {
+      console.log(`email`, email);
+      console.log(`password`, password);
+      return models.user
+        .findOne({ where: { email } })
+        .then((user) => console.log(`user`, user) || authenticate(user));
+    },
     async createUser(root, { name, email, password }, { models }) {
       return models.user.create({
         name,
