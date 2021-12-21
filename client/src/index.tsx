@@ -1,18 +1,40 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { grey } from "@mui/material/colors";
 import "typeface-roboto";
 
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  createHttpLink,
+} from "@apollo/client";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
+import App from "./App";
+import Cookies from "js-cookie";
+import CssBaseline from "@mui/material/CssBaseline";
+import React from "react";
+import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
+import { grey } from "@mui/material/colors";
+import reportWebVitals from "./reportWebVitals";
+import { setContext } from "@apollo/client/link/context";
+
+const httpLink = createHttpLink({
+  uri: "/graphql",
+  credentials: "same-origin",
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = Cookies.get("auth");
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
 
 const client = new ApolloClient({
-  uri: `/graphql`,
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 

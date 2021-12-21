@@ -1,39 +1,33 @@
 import * as React from "react";
-import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Users from "./components/User/Users";
+
 import {
-  Switch,
+  Redirect,
   Route,
   Link as RouterLink,
-  useRouteMatch,
-  Redirect,
-  useLocation,
   LinkProps as RouterLinkProps,
+  Switch,
+  useLocation,
+  useRouteMatch,
 } from "react-router-dom";
-import Link from "@mui/material/Link";
+
 import { Breadcrumbs } from "@mui/material";
-import { Type } from "typescript";
+import Container from "@mui/material/Container";
+import Link from "@mui/material/Link";
+import { Login } from "./components/Login";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import { Users } from "./components/User";
 
 function formatTitle(title: string) {
-  if (!title) return "Dashboard";
   return title.charAt(0).toUpperCase() + title.slice(1);
 }
-
-// const LinkRouter = (props: Type) => <Link {...props} component={RouterLink} />;
-const LinkBehavior = React.forwardRef<any, Omit<RouterLinkProps, "to">>(
-  (props, ref) => (
-    <RouterLink ref={ref} to="/getting-started/installation/" {...props} />
-  )
-);
 
 interface MatchParams {
   route: string;
 }
 
 export default function App() {
-  const match = useRouteMatch<MatchParams>();
+  const match = useRouteMatch<MatchParams>("/:route");
   const { pathname } = useLocation();
   const pathnames = pathname.split("/").filter((x) => x);
 
@@ -54,12 +48,14 @@ export default function App() {
           }}
         >
           <Typography variant="h1">
-            {formatTitle(match?.params?.route)}
+            {formatTitle(match?.params?.route ?? "Welcome")}
           </Typography>
           <Breadcrumbs>
-            <Link component={RouterLink} to="/">
-              Dashboard
-            </Link>
+            {match?.params?.route !== "home" && !!match?.params?.route ? (
+              <Link component={RouterLink} to="/home">
+                Home
+              </Link>
+            ) : null}
             {pathnames.map((value, index) => {
               const last = index === pathnames.length - 1;
               const to = `/${pathnames.slice(0, index + 1).join("/")}`;
@@ -80,10 +76,13 @@ export default function App() {
           <Route path="/users">
             <Users />
           </Route>
-          <Route path="/">
+          <Route path="/home">
             <Link component={RouterLink} to="/users">
               Users
             </Link>
+          </Route>
+          <Route path="/">
+            <Login />
           </Route>
           <Route path="*">
             <Redirect to="/" />

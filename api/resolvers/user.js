@@ -3,10 +3,14 @@ const { generateJwtToken } = require("../auth");
 
 const resolvers = {
   Query: {
-    async user(root, { id }, { models }) {
+    async user(root, { id }, { models, isAuth }) {
+      if (!isAuth) throw new Error("user is not authenticated");
+
       return models.user.findByPk(id);
     },
-    async allUsers(root, args, { models }) {
+    async allUsers(root, args, { models, isAuth }) {
+      if (!isAuth) throw new Error("user is not authenticated");
+
       return models.user.findAll();
     },
   },
