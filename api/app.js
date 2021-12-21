@@ -3,6 +3,7 @@ const { ApolloServer, gql } = require("apollo-server-express");
 const typeDefs = require("./schema/user");
 const resolvers = require("./resolvers/user");
 const models = require("./models");
+const { authenticate } = require("./auth");
 
 require("dotenv").config({
   path: "../.env",
@@ -14,7 +15,7 @@ async function startApolloServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: { models },
+    context: (request) => ({ models, ...authenticate(request) }),
   });
   await server.start();
 

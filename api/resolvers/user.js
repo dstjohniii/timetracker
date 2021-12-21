@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const authenticate = require("../auth");
+const { generateJwtToken } = require("../auth");
 
 const resolvers = {
   Query: {
@@ -12,13 +12,19 @@ const resolvers = {
   },
   Mutation: {
     async login(root, { email, password }, { models }) {
-      console.log(`email`, email);
-      console.log(`password`, password);
       return models.user
-        .findOne({ where: { email } })
-        .then((user) => console.log(`user`, user) || authenticate(user));
+        .findOne({
+          where: { email },
+        })
+        .then(async (user) => {
+          if (await bcrypt.compare(password, user?.password))
+            return generateJwtToken(user);
+          else throw new Error("invalid password");
+        });
     },
-    async createUser(root, { name, email, password }, { models }) {
+    async createUser(root, { name, email, password }, { models, isAuth }) {
+      if (!isAuth) throw new Error("user is not authenticated");
+
       return models.user.create({
         name,
         email,
@@ -32,10 +38,12 @@ const resolvers = {
         },
       });
     },
-    async updateUser(root, { id, name, email, password }, { models }) {
+    async updateUser(root, { id, name, email, password }, { models, isAuth }) {
+      if (!isAuth) throw new Error("user is not authenticated");
+
       return models.user
         .update(
-          { name, email, password },
+          { name, email, password: await bcrypt.hash(password, 10) },
           {
             where: {
               id,
