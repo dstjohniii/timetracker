@@ -4,7 +4,7 @@ describe("login workflow", () => {
   });
 
   it("can login successfully and navigate to users page", () => {
-    cy.findByRole("textbox", { name: "email" }).type("ringo@mail.mail");
+    cy.findByRole("textbox", { name: "email" }).type("gorog@stoneelk.com");
     cy.findByLabelText(/password/i).type("test1234");
 
     cy.findByRole("button", { name: /login/i }).click();
