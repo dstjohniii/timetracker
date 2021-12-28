@@ -73,18 +73,20 @@ export default function Login() {
           }}
         >
           <StyledTextField
+            id="login-email"
             label="email"
-            type="email"
             name="email"
+            type="email"
             value={formik.values.email}
             onChange={formik.handleChange}
             error={formik.touched.email && Boolean(formik.errors.email)}
             helperText={formik.touched.email && formik.errors.email}
           />
           <StyledTextField
+            id="login-password"
             label="password"
-            type="password"
             name="password"
+            type="password"
             value={formik.values.password}
             onChange={formik.handleChange}
             error={formik.touched.password && Boolean(formik.errors.password)}
