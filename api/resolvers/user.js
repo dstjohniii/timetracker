@@ -32,7 +32,7 @@ const resolvers = {
       return models.user.create({
         name,
         email,
-        password: await bcrypt.hash(password, 10),
+        password: await bcrypt.hash(password, process.env.SALT),
       });
     },
     async deleteUser(root, { id }, { models }) {
@@ -47,7 +47,11 @@ const resolvers = {
 
       return models.user
         .update(
-          { name, email, password: await bcrypt.hash(password, 10) },
+          {
+            name,
+            email,
+            password: await bcrypt.hash(password, process.env.SALT),
+          },
           {
             where: {
               id,
